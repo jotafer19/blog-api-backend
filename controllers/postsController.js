@@ -21,25 +21,29 @@ exports.getPostComments = async (req, res) => {
     const post = await postsService.getPostById(postId)
     const comments = post.comments
 
-    res.status(200).json({ comments })
+    res.status(200).json(comments)
 }
 
 exports.createPost = async (req, res) => {
     const { id } = req.user;
     const { title, content } = req.body;
-    // add user
+
     const post = await postsService.createPost(title, content, id)
 
-    res.status(201).json({ post })
+    res.status(201).json({
+        message: "Post created",
+        post
+    })
 }
 
 exports.createComment = async (req, res) => {
+    const { id } = req.user
     const { postId } = req.params
     const { content } = req.body
 
-    const comment = await postsService.createComment(postId, content)
+    const comment = await postsService.createComment(postId, content, id)
 
-    res.status(201).json({ comment })
+    res.status(201).json(comment)
 }
 
 exports.editPost = async (req, res) => {
@@ -48,7 +52,7 @@ exports.editPost = async (req, res) => {
 
     const post = await postsService.editPost(postId, title, content)
 
-    res.status(200).json({ post })
+    res.status(200).json(post)
 }
 
 exports.editComment = async (req, res) => {
@@ -57,7 +61,7 @@ exports.editComment = async (req, res) => {
 
     const comment = await postsService.editComment(commentId, content)
 
-    res.status(200).json({ comment })
+    res.status(200).json(comment)
 }
 
 exports.deletePost = async (req, res) => {

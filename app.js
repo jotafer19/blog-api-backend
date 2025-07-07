@@ -17,7 +17,7 @@ const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 
 const main = async () => {
-    const data = await prisma.user.findMany()
+    const data = await prisma.comment.findMany()
     console.log(data)
 }
 

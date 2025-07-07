@@ -16,12 +16,14 @@ async function getPostById(postId) {
     return await prisma.post.findUnique({
         where: {
             id: postId
+        },
+        include: {
+            comments: true
         }
     })
 }
 
 async function createPost(title, content, authorId) {
-    // add user
     return await prisma.post.create({
         data: {
             title,
@@ -31,13 +33,14 @@ async function createPost(title, content, authorId) {
     })
 }
 
-async function createComment(postId, content) {
+async function createComment(postId, content, authorId) {
     // move to comment
     // add user
     return await prisma.comment.create({
         data: {
             postId,
-            content
+            content,
+            authorId
         }
     })
 }

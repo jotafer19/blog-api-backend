@@ -23,13 +23,13 @@ exports.loginUser = async (req, res) => {
     const isMatch = await bcryptjs.compare(password, user.password)
 
     // Create a payload to avoid putting the whole user object in the token (don't expose password hash)
-    const payload = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role
-    }
+    // const payload = {
+    //     id: user.id,
+    //     username: user.username,
+    //     email: user.email,
+    //     role: user.role
+    // }
 
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET_KEY)
+    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY)
     res.json({ accessToken })
 }
