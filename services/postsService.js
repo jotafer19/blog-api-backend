@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client")
+const CustomError = require("../utils/customError")
 const prisma = new PrismaClient()
 
 async function getPublishedPosts() {
@@ -23,6 +24,14 @@ async function getPostById(postId) {
     })
 }
 
+async function getPostComments(postId) {
+    return await prisma.comment.findMany({
+        where: {
+            postId,
+        }
+    })
+}
+
 async function createPost(title, content, authorId) {
     return await prisma.post.create({
         data: {
@@ -34,8 +43,6 @@ async function createPost(title, content, authorId) {
 }
 
 async function createComment(postId, content, authorId) {
-    // move to comment
-    // add user
     return await prisma.comment.create({
         data: {
             postId,
@@ -69,6 +76,14 @@ async function editComment(commentId, content) {
 }
 
 async function deletePost(postId) {
+    const post = await prisma.post.findUnique({
+        where: {
+            id: postId
+        }
+    })
+
+    if (!post) return null;
+
     return await prisma.post.delete({
         where: {
             id: postId
@@ -77,6 +92,14 @@ async function deletePost(postId) {
 }
 
 async function deleteComment(commentId) {
+    const comment = await prisma.comment.findUnique({
+        where: {
+            id: commentId
+        }
+    })
+
+    if (!comment) return null
+
     return await prisma.comment.delete({
         where: {
             id: commentId
@@ -87,6 +110,7 @@ async function deleteComment(commentId) {
 module.exports = {
     getPublishedPosts,
     getPostById,
+    getPostComments,
     createPost,
     createComment,
     editPost,

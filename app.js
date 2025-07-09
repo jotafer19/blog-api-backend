@@ -17,7 +17,7 @@ const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 
 const main = async () => {
-    const data = await prisma.comment.findMany()
+    const data = await prisma.user.findMany()
     console.log(data)
 }
 
@@ -26,10 +26,16 @@ main()
 // Routes
 
 app.use("/auth", authRouter)
-// app.use("/users", usersRouter)
 app.use("/posts", postsRouter)
-// app.use("/comments")
 
+app.use((err, req, res) => {
+    console.log(err)
+    res.status(err.statusCode || 500).json({
+        success: false,
+        status: err.statusCode || 500,
+        message: err.message || "Internal server error"
+    })
+})
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`App is listening on port ${PORT}.`))
